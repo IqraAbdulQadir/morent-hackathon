@@ -24,7 +24,7 @@ export default function Home() {
         <Image src={"/Switch.png"} alt="" width={60} height={60} className="max-w-full" />
         <Image src={"/Drop - Off.png"} alt="" width={582} height={132} className="max-w-full" />
       </section>
-
+      
       
       <section className="popular w-full flex flex-col gap-4">
         <div className="first w-full flex items-center justify-between">
@@ -52,8 +52,10 @@ export default function Home() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/details'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>            </CardFooter>
           </Card>
 
          
@@ -72,8 +74,10 @@ export default function Home() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <Link href={'/payment'}><button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button></Link>
-            </CardFooter>
+              <Link href={'/details'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>            </CardFooter>
           </Card>
 
         
@@ -92,8 +96,10 @@ export default function Home() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/details'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>            </CardFooter>
           </Card>
 
      
@@ -112,8 +118,10 @@ export default function Home() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/details'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>            </CardFooter>
           </Card>
         </div>
       </section>
@@ -138,8 +146,10 @@ export default function Home() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/details'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>            </CardFooter>
           </Card>
 
           
@@ -158,8 +168,10 @@ export default function Home() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/details'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>            </CardFooter>
           </Card>
 
           
@@ -178,8 +190,10 @@ export default function Home() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/details'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>            </CardFooter>
           </Card>
 
           
@@ -198,8 +212,10 @@ export default function Home() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/details'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>            </CardFooter>
           </Card>
         </div>
         <div className="sec grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -219,8 +235,10 @@ export default function Home() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/details'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>            </CardFooter>
           </Card>
 
           
@@ -239,8 +257,10 @@ export default function Home() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/details'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>            </CardFooter>
           </Card>
 
           
@@ -259,8 +279,10 @@ export default function Home() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/details'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>            </CardFooter>
           </Card>
 
           
@@ -279,8 +301,10 @@ export default function Home() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/details'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>            </CardFooter>
           </Card>
         </div>
       </section>

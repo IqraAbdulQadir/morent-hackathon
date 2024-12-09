@@ -82,8 +82,10 @@ export default function page() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/payment'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>            </CardFooter>
           </Card>
 
          
@@ -122,8 +124,10 @@ export default function page() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/payment'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>             </CardFooter>
           </Card>
         </div>
       </section>
@@ -153,8 +157,10 @@ export default function page() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/payment'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>             </CardFooter>
           </Card>
 
           
@@ -173,8 +179,10 @@ export default function page() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/payment'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>             </CardFooter>
           </Card>
 
           
@@ -193,8 +201,10 @@ export default function page() {
               <p>
                 $99.00/<span className="text-gray-500">day</span>
               </p>
-              <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-            </CardFooter>
+              <Link href={'/payment'}>
+            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+              Rent Now
+            </button></Link>             </CardFooter>
           </Card>
 
         </div>
