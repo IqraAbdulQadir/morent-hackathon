@@ -9,6 +9,7 @@ const geistSans = localFont({
   variable: "--font-geist-sans",
   weight: "100 900",
 });
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -18,6 +19,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "MORENT",
   description: "A car rental",
+  icons: {
+    icon: "/favicon.png", // Specify the favicon path here
+  },
 };
 
 export default function RootLayout({
@@ -29,9 +33,10 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      ><Navbar/>
+      >
+        <Navbar />
         {children}
-        <Footer/>
+        <Footer />
       </body>
     </html>
   );
