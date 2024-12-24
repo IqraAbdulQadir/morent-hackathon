@@ -1,8 +1,6 @@
-Here’s a **professional and structured README** for your **MORENT** project. You can modify the details based on your specific implementation:
 
----
 
-# **MORENT** 🚗  
+# **MORENT** 
 _A Comprehensive Car Rental Website_
 
 ## **Table of Contents**
@@ -108,6 +106,4 @@ This project is licensed under the **MIT License**. Feel free to use it for pers
 - Inspired by the need for a seamless car rental experience.
 - Special thanks to [Next.js](https://nextjs.org) and [Tailwind CSS](https://tailwindcss.com) for powering the frontend.
 
----
 
-Let me know if you'd like to tailor any sections further! 🚀
