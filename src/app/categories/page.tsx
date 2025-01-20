@@ -1,5 +1,5 @@
-'use client'
-import React, { useState } from 'react';
+'use client';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from "next/link";
 import {
@@ -10,103 +10,136 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { client } from '@/sanity/lib/client';
+import { urlFor } from '@/sanity/lib/image';
+
+interface Car {
+  _id: string;
+  name: string;
+  type: string;
+  image: any;
+  pricePerDay: number; // Updated to number
+  fuelCapacity: string;
+  transmission: string;
+  seatingCapacity: string;
+}
 
 export default function Page() {
-  const [showMore, setShowMore] = useState(false);
+  const [cars, setCars] = useState<Car[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedType, setSelectedType] = useState<string>("");
+  const [minPrice, setMinPrice] = useState<number | null>(null);
+  const [maxPrice, setMaxPrice] = useState<number | null>(null);
 
-  const toggleShowMore = () => {
-    setShowMore(!showMore);
-  };
+  useEffect(() => {
+    const fetchCars = async () => {
+      const query =
+        '*[_type == "car"]{_id, name, type, image, pricePerDay, fuelCapacity, transmission, seatingCapacity}';
+      const data = await client.fetch(query);
+      setCars(data);
+      setLoading(false);
+    };
+
+    fetchCars();
+  }, []);
+
+  // Filter cars based on type and price range
+  const filteredCars = cars.filter((car) => {
+    const matchesType = selectedType ? car.type === selectedType : true;
+    const matchesPrice =
+      (minPrice === null || car.pricePerDay >= minPrice) &&
+      (maxPrice === null || car.pricePerDay <= maxPrice);
+    return matchesType && matchesPrice;
+  });
+
+  // Group filtered cars by type
+  const groupedCars = filteredCars.reduce((acc, car) => {
+    (acc[car.type] = acc[car.type] || []).push(car);
+    return acc;
+  }, {} as Record<string, Car[]>);
 
   return (
-    <div className='w-full flex'>
-      <div className="first hidden sm:flex w-[20%]">
-        <Image src={'/Nav Bar Side.png'} alt='' width={360} height={1600}/>
-      </div>
-      <div className="sec w-full sm:w-[80%] bg-[#f6f7f9] p-4 sm:p-6  flex flex-col gap-10 font-[family-name:var(--font-geist-sans)]">
-        <section className="w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between ">
-          <Image src={"/Pick - Up.png"} alt="" width={582} height={132} className="w-[200px] md:w-[270px] lg:w-[582px]" />
-          <Image src={"/Switch.png"} alt="" width={60} height={60} className="w-[80px]" />
-          <Image src={"/Drop - Off.png"} alt="" width={582} height={132} className=' w-[200px] md:w-[270px] lg:w-[582px]' />
-        </section>
-        <section className="popular w-full flex flex-col gap-4">
-          <div className="sec grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { title: 'Koenigsegg', image: '/car.png', desc: 'Sport' },
-              { title: 'Nissan GT - R', image: '/car (1).png', desc: 'Luxury' },
-              { title: 'Rolls-Royce', image: '/suv.png', desc: 'Sport' },
-              { title: 'All New Rush', image: '/suv (4).png', desc: 'Luxury' },
-              { title: 'CR - V', image: '/suv (4).png', desc: 'Luxury' },
-              { title: 'ALLNEW TERIOS', image: '/suv.png', desc: 'SUV' },
-              { title: 'MGZX Exclusive', image: '/suv (4).png', desc: 'Luxury' },
-              { title: 'NEW MGZS', image: '/suv.png', desc: 'SUV' },
-            ].map((car, index) => (
-              <Card key={index} className="w-full max-w-[304px] mx-auto h-auto flex flex-col justify-between">
-                <CardHeader>
-                  <CardTitle className="w-full flex items-center justify-between">
-                    {car.title} <Image src={"/heart.png"} alt="" width={20} height={20} />
-                  </CardTitle>
-                  <CardDescription>{car.desc}</CardDescription>
-                </CardHeader>
-                <CardContent className="w-full flex md:flex-col items-center justify-center gap-4">
-                  <Image src={car.image} alt="" width={220} height={68} />
-                  <Image src={"/Spesification.png"} alt="" width={256} height={24} className='hidden md:flex' />
-                  <Image src={"/Spesification (1).png"} alt="" width={256} height={24} className='md:hidden' />
-                </CardContent>
-                <CardFooter className="w-full flex items-center justify-between">
-                  <p>
-                    $99.00/<span className="text-gray-500">day</span>
-                  </p>
-                  <Link href={'/details'}>
-                  <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button></Link>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-          {showMore && (
-            <div className="sec grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[
-                { title: 'MG ZX Exclusive', image: '/suv.png', desc: 'SUV' },
-                { title: 'NEW MG ZS', image: '/suv (4).png', desc: 'Sedan' },
-                { title: 'New MG ZX Excite', image: '/suv.png', desc: 'Sport' },
-                { title: 'NEW MG ZS', image: '/suv (4).png', desc: 'Sedan' },
-              ].map((car, index) => (
-                <Card key={index} className="w-full max-w-[304px] mx-auto h-auto flex flex-col justify-between">
-                  <CardHeader>
-                    <CardTitle className="w-full flex items-center justify-between">
-                      {car.title} <Image src={"/heart.png"} alt="" width={20} height={20} />
-                    </CardTitle>
-                    <CardDescription>{car.desc}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="w-full flex md:flex-col items-center justify-center gap-4">
-                    <Image src={car.image} alt="" width={220} height={68} />
-                    <Image src={"/Spesification.png"} alt="" width={256} height={24} className='hidden md:flex' />
-                    <Image src={"/Spesification (1).png"} alt="" width={256} height={24} className='md:hidden' />
-                  </CardContent>
-                  <CardFooter className="w-full flex items-center justify-between">
-                    <p>
-                      $99.00/<span className="text-gray-500">day</span>
-                    </p>
-                    <Link href={'/details'}>
-            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
-              Rent Now
-            </button></Link>                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-          )}
-        </section>
-
-        <section className="button w-full text-center">
-          <button 
-            onClick={toggleShowMore} 
-            className="bg-[#3563e9] px-4 py-2 text-white rounded-md mt-5"
+    <div className="w-full max-w-[1280px] mx-auto px-4 sm:px-8">
+      <h1 className="text-2xl font-bold text-center my-6">Categories</h1>
+      {/* Filters */}
+      <section className="filters w-full flex flex-col gap-4 mb-6">
+        <div className="flex flex-wrap gap-4">
+          <select
+            value={selectedType}
+            onChange={(e) => setSelectedType(e.target.value)}
+            className="p-2 border rounded-md"
           >
-            {showMore ? "Show Less Cars" : "Show More Cars"}
-          </button>
-        </section>
+            <option value="">All Types</option>
+            <option value="SUV">SUV</option>
+            <option value="Sedan">Sedan</option>
+            <option value="Hatchback">Hatchback</option>
+            {/* Add more types as needed */}
+          </select>
+          <input
+            type="number"
+            placeholder="Min Price"
+            value={minPrice || ""}
+            onChange={(e) => setMinPrice(e.target.value ? parseFloat(e.target.value) : null)}
+            className="p-2 border rounded-md"
+          />
+          <input
+            type="number"
+            placeholder="Max Price"
+            value={maxPrice || ""}
+            onChange={(e) => setMaxPrice(e.target.value ? parseFloat(e.target.value) : null)}
+            className="p-2 border rounded-md"
+          />
+        </div>
+      </section>
+
+      {/* Display Filtered Cars */}
+      <div className="w-full bg-[#f6f7f9] p-4 sm:p-6 flex flex-col gap-10">
+        {loading ? (
+          <p className="text-center">Loading...</p>
+        ) : (
+          Object.keys(groupedCars).map((type) => (
+            <section key={type} className="mb-6">
+              <h2 className="text-xl font-bold mb-4">{type}</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {groupedCars[type].map((car) => (
+                  <Card
+                    key={car._id}
+                    className="w-full h-auto flex flex-col justify-between border shadow-lg"
+                  >
+                    <CardHeader>
+                      <CardTitle className="w-full flex items-center justify-between text-lg">
+                        {car.name}
+                      </CardTitle>
+                      <CardDescription className="text-sm text-gray-500">
+                        {car.type}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="w-full flex flex-col items-center justify-center gap-4">
+                      <Image
+                        src={urlFor(car.image).url()}
+                        alt={car.name}
+                        width={220}
+                        height={120}
+                        className="rounded-lg object-contain"
+                      />
+                    </CardContent>
+                    <CardFooter className="w-full flex items-center justify-between px-4 py-2 bg-gray-100">
+                      <p className="font-semibold text-gray-700">
+                        ${car.pricePerDay}/day
+                      </p>
+                      <Link href={`/cars/${car._id}`}>
+                        <button className="bg-[#3563e9] px-4 py-2 text-white rounded-md text-sm">
+                          Rent Now
+                        </button>
+                      </Link>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            </section>
+          ))
+        )}
       </div>
     </div>
   );
 }
-

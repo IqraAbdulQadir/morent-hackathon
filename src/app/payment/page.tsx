@@ -1,157 +1,297 @@
+"use client";
+
 import React from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useCart } from "@/context/CartContext";
 import Image from "next/image";
-import Link from "next/link";
 
-export default function Page() {
+// Define the combined validation schema using Zod
+const billingInfoSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  phone: z
+    .string()
+    .min(10, "Phone number must be at least 10 digits")
+    .regex(/^\d+$/, "Phone number must contain only digits"),
+  address: z.string().min(1, "Address is required"),
+  city: z.string().min(1, "City is required"),
+});
+
+const rentalInfoSchema = z.object({
+  pickupLocation: z.string().min(1, "Pickup location is required"),
+  dropoffLocation: z.string().min(1, "Dropoff location is required"),
+});
+
+const formSchema = billingInfoSchema.merge(rentalInfoSchema);
+
+type FormData = z.infer<typeof formSchema>;
+
+// Static list of cities
+const cities = [
+  "New York",
+  "Los Angeles",
+  "Chicago",
+  "Houston",
+  "Phoenix",
+  "Philadelphia",
+  "San Antonio",
+  "San Diego",
+  "Dallas",
+  "San Jose",
+  "Austin",
+  "Jacksonville",
+  "Fort Worth",
+  "Columbus",
+  "San Francisco",
+  "Charlotte",
+  "Indianapolis",
+  "Seattle",
+  "Denver",
+  "Washington",
+];
+
+export default function PaymentPage() {
+  const { cart, totalCost } = useCart();
+  const [paymentMethod, setPaymentMethod] = React.useState("creditCard");
+
+  // Initialize react-hook-form for the combined form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+  });
+
+  const handlePaymentMethodChange = (method: string) => {
+    setPaymentMethod(method);
+  };
+
+  const onSubmit: SubmitHandler<FormData> = (data) => {
+    // Combine form data with cart data
+    const rentalData = {
+      ...data,
+      pickupDate: cart[0]?.rentalStartDate, // Use dates from the cart
+      dropoffDate: cart[0]?.rentalEndDate, // Use dates from the cart
+      totalPrice: totalCost,
+      paymentMethod,
+    };
+
+    console.log("Rental Data to be saved:", rentalData);
+
+    // Save the rental data to Sanity (via your backend API)
+    fetch('/api/rentals', { method: 'POST', body: JSON.stringify(rentalData) })
+
+    alert("Payment successful!");
+  };
+
   return (
-    <div className="payment w-full bg-[#f6f7f9] p-4 sm:p-6  flex flex-wrap gap-6 justify-center font-[family-name:var(--font-geist-sans)]">
-      <div className="cards w-full md:w-[70%] grid grid-cols-1 gap-6 order-2 lg:order-1">
-        <Card className="w-full lg:w-[852px] h-auto lg:h-[336px] flex flex-col justify-around">
+    <div className="w-full bg-[#f6f7f9] p-4 sm:p-6 flex flex-col lg:flex-row gap-6 font-[family-name:var(--font-geist-sans)]">
+      {/* Left Side: Payment Steps */}
+      <div className="w-full lg:w-[70%] space-y-6">
+        {/* Billing Info */}
+        <Card>
           <CardHeader>
             <CardTitle>Billing Info</CardTitle>
-            <CardDescription className="w-full flex items-center justify-between">
-              <h1>Please enter your billing info</h1>
-              <h1>Step 1 of 4</h1>
+            <CardDescription className="flex justify-between">
+              <span>Please enter your billing info</span>
+              <span>Step 1 of 4</span>
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col gap-6">
-            <div className="w-full flex flex-wrap gap-4">
-              <div className="name flex flex-col gap-3 w-full lg:w-[46%]">
-                <label className="font-bold" htmlFor="name">Name</label>
-                <Input placeholder="Your Name" className="bg-[#f6f7f9] px-8 h-[56px] rounded-xl" />
+          <CardContent className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="font-bold">Name</label>
+                  <Input
+                    {...register("name")}
+                    placeholder="Your Name"
+                    className="bg-[#f6f7f9] h-14 rounded-xl"
+                  />
+                  {errors.name && (
+                    <p className="text-red-500 text-sm">{errors.name.message}</p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <label className="font-bold">Phone Number</label>
+                  <Input
+                    {...register("phone")}
+                    placeholder="Your Phone Number"
+                    className="bg-[#f6f7f9] h-14 rounded-xl"
+                  />
+                  {errors.phone && (
+                    <p className="text-red-500 text-sm">{errors.phone.message}</p>
+                  )}
+                </div>
               </div>
-              <div className="num flex flex-col gap-3 w-full lg:w-[50%]">
-                <label className="font-bold" htmlFor="num">Phone Number</label>
-                <Input placeholder="Your Phone Number" className="bg-[#f6f7f9] px-8 h-[56px] rounded-xl" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="font-bold">Address</label>
+                  <Input
+                    {...register("address")}
+                    placeholder="Your Address"
+                    className="bg-[#f6f7f9] h-14 rounded-xl"
+                  />
+                  {errors.address && (
+                    <p className="text-red-500 text-sm">{errors.address.message}</p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <label className="font-bold">Town/City</label>
+                  <select
+                    {...register("city")}
+                    className="bg-[#f6f7f9] w-full h-14 rounded-xl px-4"
+                  >
+                    <option value="">Select Your City</option>
+                    {cities.map((city) => (
+                      <option key={city} value={city}>
+                        {city}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.city && (
+                    <p className="text-red-500 text-sm">{errors.city.message}</p>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="w-full flex flex-wrap gap-4">
-              <div className="add flex flex-col gap-3 w-full lg:w-[46%]">
-                <label className="font-bold" htmlFor="add">Address</label>
-                <Input placeholder="Your Address" className="bg-[#f6f7f9] px-8 h-[56px] rounded-xl" />
-              </div>
-              <div className="city flex flex-col gap-3 w-full lg:w-[50%]">
-                <label className="font-bold" htmlFor="city">Town/City</label>
-                <Input placeholder="Your City" className="bg-[#f6f7f9] px-8 h-[56px] rounded-xl" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
-    
-        <Card className="w-full lg:w-[852px] h-auto lg:h-[664px] flex flex-col justify-around">
-          <CardHeader>
-            <CardTitle>Rental Info</CardTitle>
-            <CardDescription className="w-full flex items-center justify-between">
-              <h1>Please select your rental date</h1>
-              <h1>Step 2 of 4</h1>
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-6">
-            <div className="first">
-              <Image src={"/Pick - Up (1).png"} alt="Pick Up" width={92} height={20} />
-            </div>
-            <div className="sec w-full flex flex-wrap gap-4">
-              <div className="add flex flex-col gap-3 w-full lg:w-[46%]">
-                <label className="font-bold" htmlFor="add">Locations</label>
-                <select title="city" className="bg-[#f6f7f9] px-8 h-[56px] rounded-xl">
-                  <option value="">Select Your City</option>
-                </select>
+              {/* Rental Info */}
+              <div className="space-y-4 mt-6">
+                <div className="flex items-center gap-2">
+                  <Image src="/Pick - Up (1).png" alt="Pick Up" width={92} height={20} />
+                </div>
+                <div className="space-y-2">
+                  <label className="font-bold">Pickup Location</label>
+                  <select
+                    {...register("pickupLocation")}
+                    className="bg-[#f6f7f9] w-full h-14 rounded-xl px-4"
+                  >
+                    <option value="">Select Your City</option>
+                    {cities.map((city) => (
+                      <option key={city} value={city}>
+                        {city}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.pickupLocation && (
+                    <p className="text-red-500 text-sm">{errors.pickupLocation.message}</p>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Image src="/Drop - Off (1).png" alt="Drop Off" width={104} height={20} />
+                </div>
+                <div className="space-y-2">
+                  <label className="font-bold">Dropoff Location</label>
+                  <select
+                    {...register("dropoffLocation")}
+                    className="bg-[#f6f7f9] w-full h-14 rounded-xl px-4"
+                  >
+                    <option value="">Select Your City</option>
+                    {cities.map((city) => (
+                      <option key={city} value={city}>
+                        {city}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.dropoffLocation && (
+                    <p className="text-red-500 text-sm">{errors.dropoffLocation.message}</p>
+                  )}
+                </div>
               </div>
-              <div className="city flex flex-col gap-3 w-full lg:w-[50%]">
-                <label className="font-bold" htmlFor="city">Date</label>
-                <select title="cty" className="bg-[#f6f7f9] px-8 h-[56px] rounded-xl">
-                  <option value="">Select Your Date</option>
-                </select>
-              </div>
-            </div>
-            <div className="third w-full">
-              <div className="city flex flex-col gap-3 w-full lg:w-[45%]">
-                <label className="font-bold" htmlFor="city">Time</label>
-                <select title="cit" className="bg-[#f6f7f9] px-8 h-[56px] rounded-xl">
-                  <option value="">Select Your Time</option>
-                </select>
-              </div>
-            </div>
-            <div className="fourth">
-              <Image src={"/Drop - Off (1).png"} alt="Drop Off" width={104} height={20} />
-            </div>
-            <div className="sec w-full flex flex-wrap gap-4">
-              <div className="add flex flex-col gap-3 w-full lg:w-[46%]">
-                <label className="font-bold" htmlFor="add">Locations</label>
-                <select title="city" className="bg-[#f6f7f9] px-8 h-[56px] rounded-xl">
-                  <option value="">Select Your City</option>
-                </select>
-              </div>
-              <div className="city flex flex-col gap-3 w-full lg:w-[50%]">
-                <label className="font-bold" htmlFor="city">Date</label>
-                <select title="cty" className="bg-[#f6f7f9] px-8 h-[56px] rounded-xl">
-                  <option value="">Select Your Date</option>
-                </select>
-              </div>
-            </div>
-            <div className="third w-full">
-              <div className="city flex flex-col gap-3 w-full lg:w-[45%]">
-                <label className="font-bold" htmlFor="city">Time</label>
-                <select title="cit" className="bg-[#f6f7f9] px-8 h-[56px] rounded-xl">
-                  <option value="">Select Your Time</option>
-                </select>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
+              {/* Payment Method */}
+              <div className="mt-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Payment Method</CardTitle>
+                    <CardDescription className="flex justify-between">
+                      <span>Please enter your payment method</span>
+                      <span>Step 3 of 4</span>
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-4">
+                      <Button
+                        variant={paymentMethod === "creditCard" ? "default" : "outline"}
+                        onClick={() => handlePaymentMethodChange("creditCard")}
+                        className="w-full h-14"
+                      >
+                        Credit Card
+                      </Button>
+                      <Button
+                        variant={paymentMethod === "paypal" ? "default" : "outline"}
+                        onClick={() => handlePaymentMethodChange("paypal")}
+                        className="w-full h-14"
+                      >
+                        PayPal
+                      </Button>
+                      <Button
+                        variant={paymentMethod === "bitcoin" ? "default" : "outline"}
+                        onClick={() => handlePaymentMethodChange("bitcoin")}
+                        className="w-full h-14"
+                      >
+                        Bitcoin
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
 
-        <Card className="w-full lg:w-[852px] h-auto lg:h-[596px] flex flex-col justify-around">
-          <CardHeader>
-            <CardTitle>Payment Method</CardTitle>
-            <CardDescription className="w-full flex items-center justify-between">
-              <h1>Please enter your payment method</h1>
-              <h1>Step 3 of 4</h1>
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-6">
-            <Image src={"/Credit Card.png"} alt="Credit Card" width={804} height={308} />
-            <Image src={"/PayPal.png"} alt="PayPal" width={804} height={56} />
-            <Image src={"/Bitcoin.png"} alt="Bitcoin" width={804} height={56} />
-          </CardContent>
-        </Card>
-
-      
-        <Card className="w-full lg:w-[852px] h-auto lg:h-[484px] flex flex-col justify-around">
-          <CardHeader>
-            <CardTitle>Confirmation</CardTitle>
-            <CardDescription className="w-full flex items-center justify-between">
-              <h1>We are getting to the end. Just a few clicks and your rental is ready</h1>
-              <h1>Step 4 of 4</h1>
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-8">
-            <Image src={"/Confirmation.png"} alt="Confirmation" width={804} height={136} />
-            <Link href={'/admin'}>
-            <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
-              Rent Now
-            </button></Link>
-            
-            <Image src={"/Safe Data.png"} alt="Safe Data" width={548} height={100} />
+              {/* Confirmation */}
+              <div className="mt-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Confirmation</CardTitle>
+                    <CardDescription className="flex justify-between">
+                      <span>We are getting to the end. Just a few clicks and your rental is ready</span>
+                      <span>Step 4 of 4</span>
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <Button type="submit" className="w-full h-14 bg-[#3563e9]">
+                      Rent Now
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </form>
           </CardContent>
         </Card>
       </div>
-      <div className="details w-full flex-shrink-0 lg:w-[40%] order-1 lg:order-2 flex justify-center">
-        <Image src={"/Rental Summary.png"} alt="Rental Summary" width={492} height={568} className=" lg:w-[492px] h-[568px]"  />
+
+      {/* Right Side: Rental Summary */}
+      <div className="w-full lg:w-[30%]">
+        <Card className="p-6">
+          <CardHeader>
+            <CardTitle>Rental Summary</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {cart.map((item) => (
+              <div key={item.id} className="space-y-2">
+                <p className="font-bold">{item.name}</p>
+                <p className="text-gray-500">
+                  {new Date(item.rentalStartDate).toLocaleDateString()} -{" "}
+                  {new Date(item.rentalEndDate).toLocaleDateString()}
+                </p>
+                <p className="text-gray-500">${item.totalPrice}</p>
+              </div>
+            ))}
+            <div className="border-t pt-4">
+              <p className="font-bold">Total: ${totalCost}</p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
 }
-
-
-
