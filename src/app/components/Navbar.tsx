@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import CartIcon from './CartIcon';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 
 const Navbar: React.FC = () => {
   const pathname = usePathname();
@@ -16,25 +17,26 @@ const Navbar: React.FC = () => {
   };
 
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent form submission
+    e.preventDefault();
     if (searchQuery.trim()) {
-      // Redirect to the homepage or car listing page with the search query
       router.push(`/?search=${encodeURIComponent(searchQuery)}`);
     }
   };
 
   return (
-    <div className='w-full bg-white h-auto flex flex-col md:flex-row items-center justify-between p-4 md:p-8 border-b-2 border-b-[#e7eef6]'>
+    <div className="w-full bg-white h-auto flex flex-col md:flex-row items-center justify-between p-4 md:p-8 border-b-2 border-b-[#e7eef6]">
       <div className="first flex flex-col md:flex-row items-center gap-4 md:gap-16">
-        <Link href='/'><h1 className='text-[#3563e9] text-4xl font-bold'>MORENT</h1></Link>
+        <Link href="/">
+          <h1 className="text-[#3563e9] text-4xl font-bold">MORENT</h1>
+        </Link>
         <form onSubmit={handleSearch} className="input relative w-full md:w-auto">
-          <input 
-            type="text" 
-            title="search" 
-            placeholder="Search for cars..." 
+          <input
+            type="text"
+            title="search"
+            placeholder="Search for cars..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className='border-2 border-[#e7eef6] w-full md:w-[492px] h-[44px] rounded-full p-2 pl-10 pr-12'
+            className="border-2 border-[#e7eef6] w-full md:w-[492px] h-[44px] rounded-full p-2 pl-10 pr-12"
           />
           <button type="submit" className="absolute right-4 top-1/2 transform -translate-y-1/2">
             🔍
@@ -97,6 +99,16 @@ const Navbar: React.FC = () => {
           About
         </Link>
         <CartIcon />
+
+        {/* Clerk Authentication Buttons */}
+        <div className="flex items-center space-x-4">
+          <SignedOut>
+            <SignInButton mode="modal" />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </div>
       </div>
     </div>
   );

@@ -34,6 +34,12 @@ export default {
         
       },
       {
+        name: 'userId',
+        type: 'string',
+        title: 'User ID',
+        description: 'ID of the authenticated user',
+      },
+      {
         name: 'status',
         type: 'string',
         title: 'Payment Status',

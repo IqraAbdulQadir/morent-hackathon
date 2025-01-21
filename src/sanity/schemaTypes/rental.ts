@@ -18,6 +18,12 @@ export default {
       description: "The customer renting the car",
     },
     {
+      name: 'userId',
+      type: 'string',
+      title: 'User ID',
+      description: 'ID of the authenticated user',
+    },
+    {
       name: "startDate",
       type: "datetime",
       title: "Start Date",
