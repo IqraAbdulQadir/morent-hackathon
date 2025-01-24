@@ -1,44 +1,35 @@
-// src/app/api/rentals/route.ts
+// app/api/rentals/route.ts
 import { NextResponse } from 'next/server';
-import { client } from '../../../sanity/lib/client';
+import { client } from '@/sanity/lib/client';
 
-export async function POST(request: Request) {
-  const body = await request.json();
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const userId = searchParams.get('userId');
+
+  console.log('Fetching rentals for user ID:', userId); // Debugging
+
+  if (!userId) {
+    return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+  }
 
   try {
-    // Ensure the request body contains the required fields
-    if (!body.userId || !body.car || !body.startDate || !body.endDate || !body.totalPrice) {
-      return NextResponse.json(
-        { message: 'Missing required fields' },
-        { status: 400 }
-      );
-    }
+    const query = `*[_type == "rental" && userId == "${userId}"]{
+      _id,
+      car->{name, model},
+      startDate,
+      endDate,
+      duration,
+      totalPrice,
+      status,
+      paymentStatus
+    }`;
+    const rentals = await client.fetch(query);
 
-    // Create the rental in Sanity
-    const rental = await client.create({
-      _type: 'rental',
-      customer: {
-        _type: 'reference',
-        _ref: body.userId, // Link the rental to the user
-      },
-      car: {
-        _type: 'reference',
-        _ref: body.car, // Link the rental to the car
-      },
-      startDate: body.startDate,
-      endDate: body.endDate,
-      duration: body.duration,
-      totalPrice: body.totalPrice,
-      status: 'pending',
-      paymentStatus: 'unpaid',
-    });
+    console.log('Rentals fetched:', rentals); // Debugging
 
-    return NextResponse.json(rental, { status: 201 });
+    return NextResponse.json({ rentals }, { status: 200 });
   } catch (error) {
-    console.error('Error creating rental:', error);
-    return NextResponse.json(
-      { message: 'Error creating rental' },
-      { status: 500 }
-    );
+    console.error('Error fetching rentals:', error);
+    return NextResponse.json({ error: 'Failed to fetch rentals' }, { status: 500 });
   }
 }
