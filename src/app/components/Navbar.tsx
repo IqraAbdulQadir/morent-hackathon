@@ -106,7 +106,7 @@ const Navbar: React.FC = () => {
             <SignInButton mode="modal" />
           </SignedOut>
           <SignedIn>
-            <UserButton />
+            <UserButton afterSignOutUrl="/" userProfileUrl="/profile" />
           </SignedIn>
         </div>
       </div>
