@@ -2,34 +2,34 @@
 import { NextResponse } from 'next/server';
 import { client } from '@/sanity/lib/client';
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const userId = searchParams.get('userId');
-
-  console.log('Fetching rentals for user ID:', userId); // Debugging
-
-  if (!userId) {
-    return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
-  }
-
+export async function POST(request: Request) {
   try {
-    const query = `*[_type == "rental" && userId == "${userId}"]{
-      _id,
-      car->{name, model},
-      startDate,
-      endDate,
-      duration,
-      totalPrice,
-      status,
-      paymentStatus
-    }`;
-    const rentals = await client.fetch(query);
+    const { userId, carId, startDate, endDate, duration, totalPrice } = await request.json();
 
-    console.log('Rentals fetched:', rentals); // Debugging
+    console.log('Creating rental for user ID:', userId); // Debugging
 
-    return NextResponse.json({ rentals }, { status: 200 });
+    const rental = {
+      _type: 'rental',
+      userId: userId, // Use the authenticated user's ID
+      car: {
+        _type: 'reference',
+        _ref: carId,
+      },
+      startDate: startDate,
+      endDate: endDate,
+      duration: duration,
+      totalPrice: totalPrice,
+      status: 'Pending',
+      paymentStatus: 'Unpaid',
+    };
+
+    const createdRental = await client.create(rental);
+
+    console.log('Rental created in Sanity:', createdRental); // Debugging
+
+    return NextResponse.json({ success: true, rental: createdRental }, { status: 201 });
   } catch (error) {
-    console.error('Error fetching rentals:', error);
-    return NextResponse.json({ error: 'Failed to fetch rentals' }, { status: 500 });
+    console.error('Error creating rental:', error);
+    return NextResponse.json({ success: false, error: 'Failed to create rental' }, { status: 500 });
   }
 }

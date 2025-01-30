@@ -10,6 +10,11 @@ export default {
         
       },
       {
+        name: 'clerkId',
+        type: 'string',
+        title: 'Clerk User ID',
+      },
+      {
         name: 'email',
         type: 'string',
         title: 'Email',

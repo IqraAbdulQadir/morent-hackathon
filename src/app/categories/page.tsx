@@ -73,6 +73,13 @@ export default function Page() {
             <option value="SUV">SUV</option>
             <option value="Sedan">Sedan</option>
             <option value="Hatchback">Hatchback</option>
+            <option value="Sport">Sport</option>
+            <option value="Electric">Electric</option>
+            <option value="Gasoline">Gasoline</option>
+            <option value="Diesel">Diesel</option>
+
+
+
             {/* Add more types as needed */}
           </select>
           <input

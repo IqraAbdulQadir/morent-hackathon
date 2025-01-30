@@ -1,4 +1,3 @@
-// src/app/api/customers/route.ts
 import { NextResponse } from 'next/server';
 import { client } from '../../../sanity/lib/client';
 import { groq } from 'next-sanity';
@@ -27,9 +26,10 @@ export async function POST(request: Request) {
       const customer = await client.create({
         _type: 'customer',
         ...body,
+        clerkId: body.clerkId, // Store the Clerk user ID
       });
       return NextResponse.json(customer, { status: 201 });
     } catch (error) {
       return NextResponse.json({ message: 'Error creating customer' }, { status: 500 });
     }
-  }
+}
