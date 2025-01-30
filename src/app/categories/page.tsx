@@ -61,6 +61,7 @@ export default function Page() {
   return (
     <div className="w-full max-w-[1280px] mx-auto px-4 sm:px-8">
       <h1 className="text-2xl font-bold text-center my-6">Categories</h1>
+
       {/* Filters */}
       <section className="filters w-full flex flex-col gap-4 mb-6">
         <div className="flex flex-wrap gap-4">

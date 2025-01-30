@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
 import { client } from '../sanity/lib/client';
 import { urlFor } from '../sanity/lib/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 interface Car {
@@ -18,7 +18,7 @@ interface Car {
   seatingCapacity: string;
 }
 
-export default function Home() {
+function CarList() {
   const [cars, setCars] = useState<Car[]>([]);
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('search') || '';
@@ -39,44 +39,52 @@ export default function Home() {
   );
 
   return (
+    <div className="sec grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {filteredCars.map((car) => (
+        <Card key={car._id} className="w-full max-w-[304px] mx-auto h-auto flex flex-col justify-between">
+          <CardHeader>
+            <CardTitle className="w-full flex items-center justify-between">
+              {car.name}
+            </CardTitle>
+            <CardDescription>{car.type}</CardDescription>
+          </CardHeader>
+          <CardContent className="w-full flex flex-col items-center justify-center gap-4">
+            <Image src={urlFor(car.image).url()} alt={car.name} width={220} height={68} />
+            <div className="flex justify-between w-full">
+              <div className="bg-gray-200 p-2 rounded text-center">
+                {car.fuelCapacity}
+              </div>
+              <div className="bg-gray-200 p-2 rounded text-center">
+                {car.seatingCapacity}
+              </div>
+              <div className="bg-gray-200 p-2 rounded text-center">
+                {car.transmission}
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="w-full flex items-center justify-between">
+            <p>${car.pricePerDay}/day</p>
+            <Link href={`/cars/${car._id}`}>
+              <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
+                Rent Now
+              </button>
+            </Link>
+          </CardFooter>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+export default function Home() {
+  return (
     <div className="bg-[#f6f7f9] min-h-screen p-4 sm:p-6 lg:p-20 flex flex-col gap-10 font-[family-name:var(--font-geist-sans)]">
       {/* Popular Cars Section */}
       <section className="popular w-full flex flex-col gap-4">
         <h1 className="text-gray-500 text-lg sm:text-xl">Popular Car</h1>
-        <div className="sec grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {filteredCars.map((car) => (
-            <Card key={car._id} className="w-full max-w-[304px] mx-auto h-auto flex flex-col justify-between">
-              <CardHeader>
-                <CardTitle className="w-full flex items-center justify-between">
-                  {car.name}
-                </CardTitle>
-                <CardDescription>{car.type}</CardDescription>
-              </CardHeader>
-              <CardContent className="w-full flex flex-col items-center justify-center gap-4">
-                <Image src={urlFor(car.image).url()} alt={car.name} width={220} height={68} />
-                <div className="flex justify-between w-full">
-                  <div className="bg-gray-200 p-2 rounded text-center">
-                    {car.fuelCapacity}
-                  </div>
-                  <div className="bg-gray-200 p-2 rounded text-center">
-                    {car.seatingCapacity}
-                  </div>
-                  <div className="bg-gray-200 p-2 rounded text-center">
-                    {car.transmission}
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="w-full flex items-center justify-between">
-                <p>${car.pricePerDay}/day</p>
-                <Link href={`/cars/${car._id}`}>
-                  <button className="bg-[#3563e9] p-2 text-white rounded-xl w-[140px] h-[56px]">
-                    Rent Now
-                  </button>
-                </Link>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+        <Suspense fallback={<p>Loading cars...</p>}>
+          <CarList />
+        </Suspense>
       </section>
 
       {/* Show More Button */}
