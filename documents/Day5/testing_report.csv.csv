@@ -1,0 +1,44 @@
+Test Case ID,Test Case Description,Test Steps,Expected Result,Actual Result,Status,Severity Level,Remarks
+FC-001,Verify product listing displays, Load the homepage. >. Check if products are displayed.,Products are displayed correctly.,All products are visible,Passed,Low,Test successful
+FC-002,Test API error handling,"Simulate an empty product list. >. Check for ""No items found"" message.","""No items found"" message is displayed.
+",Message shown successfully,Passed,Medium,No issues
+FC-003,Verify category filter work,"Apply a category filter (e.g., ""Sports"").
+>. Check displayed products.",Only products in the category are shown.,Products shown according to category,Passed,Medium,No issues
+FC-004,Verify search functionality," Enter a search term (e.g., ""Porsche""). >. Check displayed products.",Relevant products are displayed.,Only matching products are shown,Passed,Low,Handled gracefully
+EH-001,Verify no results for invalid search,"Enter an invalid search term (e.g., ""xyz123""). >. Check for ""No results found"" message.","""No results found"" message is displayed.",Message shown successfully,Passed,Medium,Test successful
+FC-005,Verify adding item to cart,"Click """"Add to Cart"""" on a product.  >. Check cart count updates.""",Item is added to cart; count increases.,Count in cart icon increased adding cars,Passed,High,Handled gracefully
+FC-006,Verify removing item from cart,"Add an item to cart. >. Click ""Remove"" in cart. >. Check cart count.",Item is removed; count decreases.,Count in cart icon decreased by clicking remove,Passed,High,Handled gracefully
+,,,,,,,
+FC-007,Verify price per duration,Add an item to cart >. Increase duration of rental  >. Check cart total.,Cart total updates correctly.,Total updated according to set duration,Passed,High,Test successful
+FC-008,Verify product detail page loads,Click on a product. >. Check if product details are displayed.,Product details load correctly.,Details shown according to product,Passed,low,No issues
+EH-002,Verify 404 for invalid product ID,"Visit an invalid product URL (e.g., ""/cars/invalid-id""). >. Check for 404 page.",404 page is displayed.,404 page visible,Passed,medium,Test successful
+EH003,Handle booking without dates,Try to book without selecting dates.,"Error message: ""Please select a valid rental date""",Error shown as notification,Passed,medium,Test successful
+EH004,Hnadle invalid form input,Put invalid data in field such as phone number and email,Error messages from ZOD,ZOD form validation and erroe messages displayed,Passed,medium,No issues
+FC-009,Verify page linking,Click the buttons on the navbar,Being redirected to the revelant page,Redirected to revelent page after clicking,Passed,Low,Test successful
+FC-010,Verify pagination,scroll to the end of the page > Click show more,Next set of cars is displayed,Next set of cars visible,Passed,Low,No issues
+BD-001,Ensure responsiveness on mobile,Resize browser window > Check layout,Layout adjusts properly to screen size,Responsive layout working as intended,Passed,Medium,Gracefully handled component overflow
+FC-011,Verify availability calendar,1. Check if availability dates are displayed.,Availability dates are displayed correctly.,Only available dates are visible,Passed,Medium,Handled gracefully
+UA-001,Verify user registration,1. Register a new user using clerk,User is registered successfully.,User is registered and assigned an ID,Passed,High,Handled gracefully
+UA-002,Verify user login,1. Log in with valid credentials.,User is logged in successfully.,User is logged in using clerk,Passed,High,No issues
+UA-003,Verify booking history,"1. Log in.
+2. Check booking history.",Past bookings are displayed correctly.,Rental history is available in profile page,Passed,medium,Test successful
+,,,,,Passed,,
+BD-002,Test on Chrome,"1. Open website in Chrome.
+2. Test all core features.",All features work correctly.,All features work correctly.,Passed,High,Most popular browser.
+BD-003,Test on Firefox,"1. Open website in Firefox.
+2. Test all core features.",All features work correctly.,All features work correctly.,Passed,High,Second most popular browser.
+BD-004,Test on Safari,"1. Open website in Safari.
+2. Test all core features.",All features work correctly.,All features work correctly.,Passed,High,Critical for macOS/iOS users.
+BD-005,Test on Edge,"1. Open website in Edge.
+2. Test all core features.",All features work correctly.,All features work correctly.,Passed,Medium,Popular among Windows users.
+BD-006,Test on mobile devices (iOS),"1. Open website on an iPhone.
+2. Test all core features.",All features work correctly.,All features work correctly.,Passed,High,Critical for mobile users.
+BD-007,Test on mobile devices (Android),"1. Open website on an Android device.
+2. Test all core features.",All features work correctly.,All features work correctly.,Passed,High,Critical for mobile users.
+BD-008,Test on tablets (iPad),"1. Open website on an iPad.
+2. Test all core features.",All features work correctly.,All features work correctly.,Passed,Medium,Ensures tablet compatibility.
+BD-009,Test on different screen resolutions,"1. Test website on different screen sizes (e.g., 1280x720, 1920x1080).",Layout adjusts properly to screen size.,Layout adjusts properly to screen size.,Passed,Medium,Ensures responsiveness.
+BD-010,Test with browser zoom,"1. Zoom in/out (e.g., 125%, 150%).
+2. Check layout and functionality.",Layout and functionality remain intact.,Layout and functionality remain intact.,Passed,Low,Ensures usability for all users.
+ST-001,Test input validation,Input SQL injections and wrong data,ZOD error messages and security,ZOD validated input,Passed,High,No issues
+PO-001,Test initial load time,Visit the link of the website,Load time is 2 seconds,Loading only takes 2 seconds,Passed,Medium,Handled gracefully

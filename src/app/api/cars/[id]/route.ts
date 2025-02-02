@@ -17,7 +17,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
       transmission,
       seatingCapacity
     }`;
-    const car = await client.fetch(query, { id });
+    const car = await client.fetch(query, { id }).catch(() => null);
 
     if (!car) {
       return NextResponse.json({ message: 'Car not found' }, { status: 404 });

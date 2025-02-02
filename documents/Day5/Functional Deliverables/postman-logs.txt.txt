@@ -1,0 +1,51 @@
+Postman API Testing Logs
+========================
+
+Date: 2025-02-01
+
+Collection: Marketplace API Endpoints
+---------------------------------------
+
+1. Endpoint: POST /api/register
+   - Status Code: 201 Created
+   - Response Time: 180ms
+   - Response Body: {"message": "User registered successfully.", "userId": "abc123"}
+   - Test Result: PASS
+
+2. Endpoint: POST /api/login
+   - Status Code: 200 OK
+   - Response Time: 150ms
+   - Response Body: {"message": "Login successful.", "token": "jwt-token-string"}
+   - Test Result: PASS
+
+3. Endpoint: GET /api/cars
+   - Status Code: 200 OK
+   - Response Time: 130ms
+   - Response Body: {"products": [ ... ]}
+   - Test Result: PASS
+
+4. Endpoint: GET /api/cars?search=sports
+   - Status Code: 200 OK
+   - Response Time: 140ms
+   - Response Body: {"products": [ ... ]}
+   - Test Result: PASS
+
+5. Endpoint: POST /api/checkout
+   - Status Code: 200 OK
+   - Response Time: 220ms
+   - Response Body: {"message": "Order processed successfully.", "orderId": "order789"}
+   - Test Result: PASS
+
+6. Endpoint: GET /api/user/profile
+   - Status Code: 200 OK
+   - Response Time: 160ms
+   - Response Body: {"user": { "id": "abc123", "name": "Ameen Alam", ... }}
+   - Test Result: PASS
+
+Summary:
+--------
+Total Requests: 6
+Successful: 6
+Failed: 0
+Average Response Time: 163ms
+

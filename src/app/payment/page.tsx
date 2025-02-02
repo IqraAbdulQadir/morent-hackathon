@@ -64,15 +64,14 @@ const cities = [
 
 export default function PaymentPage() {
   const { cart, totalCost } = useCart();
-  const [paymentMethod, setPaymentMethod] = useState("creditCard");
   const [isMounted, setIsMounted] = useState(false); // Track if the component has mounted
+  const [loading, setLoading] = useState(false);
 
   // Initialize react-hook-form for the combined form
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<CombinedFormData>({
     resolver: zodResolver(combinedSchema),
   });
@@ -82,11 +81,33 @@ export default function PaymentPage() {
     setIsMounted(true);
   }, []);
 
-  const handlePaymentMethodChange = (method: string) => {
-    setPaymentMethod(method);
+  const handleCheckout = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url; // Redirect to Stripe Checkout
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred during checkout. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const onSubmit: SubmitHandler<CombinedFormData> = (data) => {
+  const onSubmit: SubmitHandler<CombinedFormData> = async (data) => {
     const pickupDate = new Date(data.pickupDate);
     const dropoffDate = new Date(data.dropoffDate);
 
@@ -97,8 +118,9 @@ export default function PaymentPage() {
     }
 
     console.log("Form Data:", data);
+
     // Handle payment submission (e.g., integrate with Stripe or PayPal)
-    alert("Payment successful!");
+    await handleCheckout();
   };
 
   // Render nothing until the component mounts
@@ -110,17 +132,17 @@ export default function PaymentPage() {
     <div className="w-full bg-[#f6f7f9] p-4 sm:p-6 flex flex-col lg:flex-row gap-6 font-[family-name:var(--font-geist-sans)]">
       {/* Left Side: Payment Steps */}
       <div className="w-full lg:w-[70%] space-y-6">
-        {/* Billing Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Billing Info</CardTitle>
-            <CardDescription className="flex justify-between">
-              <span>Please enter your billing info</span>
-              <span>Step 1 of 4</span>
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {/* Billing Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Billing Info</CardTitle>
+              <CardDescription className="flex justify-between">
+                <span>Please enter your billing info</span>
+                <span>Step 1 of 4</span>
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="font-bold">Name</label>
@@ -175,21 +197,19 @@ export default function PaymentPage() {
                   )}
                 </div>
               </div>
-            </form>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        {/* Rental Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Rental Info</CardTitle>
-            <CardDescription className="flex justify-between">
-              <span>Please select your rental date</span>
-              <span>Step 2 of 4</span>
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <form onSubmit={handleSubmit(onSubmit)}>
+          {/* Rental Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Rental Info</CardTitle>
+              <CardDescription className="flex justify-between">
+                <span>Please select your rental date</span>
+                <span>Step 2 of 4</span>
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <Image src="/Pick - Up (1).png" alt="Pick Up" width={92} height={20} />
@@ -282,61 +302,29 @@ export default function PaymentPage() {
                   )}
                 </div>
               </div>
-            </form>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        {/* Payment Method */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Payment Method</CardTitle>
-            <CardDescription className="flex justify-between">
-              <span>Please enter your payment method</span>
-              <span>Step 3 of 4</span>
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-4">
-              <Button
-                variant={paymentMethod === "creditCard" ? "default" : "outline"}
-                onClick={() => handlePaymentMethodChange("creditCard")}
-                className="w-full h-14"
+          {/* Confirmation */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Confirmation</CardTitle>
+              <CardDescription className="flex justify-between">
+                <span>We are getting to the end. Just a few clicks and your rental is ready</span>
+                <span>Step 3 of 4</span>
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-6 py-3 rounded-lg"
+                disabled={loading}
               >
-                Credit Card
-              </Button>
-              <Button
-                variant={paymentMethod === "paypal" ? "default" : "outline"}
-                onClick={() => handlePaymentMethodChange("paypal")}
-                className="w-full h-14"
-              >
-                PayPal
-              </Button>
-              <Button
-                variant={paymentMethod === "bitcoin" ? "default" : "outline"}
-                onClick={() => handlePaymentMethodChange("bitcoin")}
-                className="w-full h-14"
-              >
-                Bitcoin
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Confirmation */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Confirmation</CardTitle>
-            <CardDescription className="flex justify-between">
-              <span>We are getting to the end. Just a few clicks and your rental is ready</span>
-              <span>Step 4 of 4</span>
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <Button onClick={handleSubmit(onSubmit)} className="w-full h-14 bg-[#3563e9]">
-              Rent Now
-            </Button>
-          </CardContent>
-        </Card>
+                {loading ? "Processing..." : "Checkout"}
+              </button>
+            </CardContent>
+          </Card>
+        </form>
       </div>
 
       {/* Right Side: Rental Summary */}
@@ -345,6 +333,7 @@ export default function PaymentPage() {
           <CardHeader>
             <CardTitle>Rental Summary</CardTitle>
           </CardHeader>
+          <span>Step 4 of 4</span>
           <CardContent className="space-y-4">
             {cart.map((item) => (
               <div key={item.id} className="space-y-2">
