@@ -1,5 +1,3 @@
-
-
 # **MORENT** 
 _A Comprehensive Car Rental Website_
 
@@ -9,6 +7,8 @@ _A Comprehensive Car Rental Website_
 - [Tech Stack](#tech-stack)
 - [Setup and Installation](#setup-and-installation)
 - [Usage](#usage)
+- [Project Activities](#project-activities)
+- [Test Case Results](#test-case-results)
 - [Folder Structure](#folder-structure)
 - [Contributing](#contributing)
 - [License](#license)
@@ -35,7 +35,6 @@ _A Comprehensive Car Rental Website_
   - [Next.js](https://nextjs.org) (with App Router)  
   - [React](https://reactjs.org)  
   - [Tailwind CSS](https://tailwindcss.com)  
-
 
 ---
 
@@ -67,6 +66,25 @@ _A Comprehensive Car Rental Website_
 - Use the **search bar** or filters to refine results.  
 - Click on a car to view detailed specifications.  
 - Use the **Contact Page** to reach out for queries or support.
+
+---
+
+## **Project Activities**
+On Day 5, the project underwent extensive testing and backend refinement. This included:
+- Comprehensive testing procedures documented in the **Day 5 Testing and Backend Refinement - [Morent].pdf**.
+- Performance analysis through the Lighthouse report.
+- Detailed results captured in the **testing_report.csv**.
+
+---
+
+## **Test Case Results**
+The testing results include:
+- A comprehensive report detailing the testing procedures and outcomes.
+- A CSV file containing the results of the tests performed.
+- Logs from Postman showing API request results.
+- Screenshots demonstrating the application behavior across different devices and browsers.
+
+For detailed insights, please refer to the documents in the **Day 5** folder.
 
 ---
 
@@ -105,5 +123,3 @@ This project is licensed under the **MIT License**. Feel free to use it for pers
 ## **Acknowledgments**
 - Inspired by the need for a seamless car rental experience.
 - Special thanks to [Next.js](https://nextjs.org) and [Tailwind CSS](https://tailwindcss.com) for powering the frontend.
-
-
